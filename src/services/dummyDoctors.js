@@ -1,10 +1,10 @@
-
 const dummyDoctors = [
   {
     id: 1,
     name: 'Dr. Ananya Sharma',
     specialization: 'Cardiologist',
     experience: 8,
+    about: 'Heart diseases, blood pressure, chest pain, ECG',
     image: 'https://randomuser.me/api/portraits/women/45.jpg',
   },
   {
@@ -12,6 +12,7 @@ const dummyDoctors = [
     name: 'Dr. Rohan Mehta',
     specialization: 'Dermatologist',
     experience: 5,
+    about: 'Skin, hair, acne, allergies, rashes',
     image: 'https://randomuser.me/api/portraits/men/32.jpg',
   },
   {
@@ -19,6 +20,7 @@ const dummyDoctors = [
     name: 'Dr. Priya Deshmukh',
     specialization: 'Pediatrician',
     experience: 10,
+    about: 'Child health, vaccination, infant care',
     image: 'https://randomuser.me/api/portraits/women/68.jpg',
   },
   {
@@ -26,7 +28,72 @@ const dummyDoctors = [
     name: 'Dr. Arjun Patil',
     specialization: 'Orthopedic',
     experience: 6,
+    about: 'Bone fractures, joint pain, arthritis, sports injury',
     image: 'https://randomuser.me/api/portraits/men/76.jpg',
+  },
+  {
+    id: 5,
+    name: 'Dr. Kavita Joshi',
+    specialization: 'Neurologist',
+    experience: 12,
+    about: 'Headache, migraine, seizures, nerve disorders',
+    image: 'https://randomuser.me/api/portraits/women/33.jpg',
+  },
+  {
+    id: 6,
+    name: 'Dr. Sanjay Kulkarni',
+    specialization: 'Gastroenterologist',
+    experience: 9,
+    about: 'Stomach pain, acidity, digestion, liver issues',
+    image: 'https://randomuser.me/api/portraits/men/54.jpg',
+  },
+  {
+    id: 7,
+    name: 'Dr. Meera Nair',
+    specialization: 'Gynecologist',
+    experience: 11,
+    about: "Women's health, pregnancy care, menstrual issues",
+    image: 'https://randomuser.me/api/portraits/women/22.jpg',
+  },
+  {
+    id: 8,
+    name: 'Dr. Vikram Singh',
+    specialization: 'ENT Specialist',
+    experience: 7,
+    about: 'Ear, nose, throat infections, hearing issues',
+    image: 'https://randomuser.me/api/portraits/men/41.jpg',
+  },
+  {
+    id: 9,
+    name: 'Dr. Neha Kapoor',
+    specialization: 'Psychiatrist',
+    experience: 8,
+    about: 'Anxiety, depression, stress, sleep disorders',
+    image: 'https://randomuser.me/api/portraits/women/56.jpg',
+  },
+  {
+    id: 10,
+    name: 'Dr. Amit Verma',
+    specialization: 'Dentist',
+    experience: 6,
+    about: 'Toothache, cavities, gum disease, braces',
+    image: 'https://randomuser.me/api/portraits/men/29.jpg',
+  },
+  {
+    id: 11,
+    name: 'Dr. Pooja Reddy',
+    specialization: 'Ophthalmologist',
+    experience: 9,
+    about: 'Eye checkups, vision problems, cataract',
+    image: 'https://randomuser.me/api/portraits/women/71.jpg',
+  },
+  {
+    id: 12,
+    name: 'Dr. Rahul Iyer',
+    specialization: 'General Physician',
+    experience: 14,
+    about: 'Fever, cold, cough, general health checkups',
+    image: 'https://randomuser.me/api/portraits/men/85.jpg',
   },
 ];
 
