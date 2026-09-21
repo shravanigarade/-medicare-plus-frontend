@@ -10,7 +10,7 @@ function Dashboard() {
     const fetchAppointments = async () => {
       try {
         const response = await axios.get(
-          https://medicare-plus-backend-1.onrender.com/api/appointments/my/${user.id}`
+          `https://medicare-plus-backend-1.onrender.com/api/appointments/my/${user.id}`
         );
         setAppointments(response.data);
       } catch (error) {
@@ -39,14 +39,18 @@ function Dashboard() {
   return (
     <div className="container py-5">
       <h2 className="fw-bold mb-2">My Dashboard</h2>
-      <p className="text-muted mb-4">Welcome back, {user?.name}!</p>
+      <p className="text-muted mb-4">
+        Welcome back, {user?.name}!
+      </p>
 
       <h4 className="mb-3">My Appointments</h4>
 
       {loading ? (
         <p>Loading appointments...</p>
       ) : appointments.length === 0 ? (
-        <p className="text-muted">You haven't booked any appointments yet.</p>
+        <p className="text-muted">
+          You haven't booked any appointments yet.
+        </p>
       ) : (
         <div className="table-responsive">
           <table className="table table-hover align-middle">
@@ -58,6 +62,7 @@ function Dashboard() {
                 <th>Status</th>
               </tr>
             </thead>
+
             <tbody>
               {appointments.map((appt) => (
                 <tr key={appt._id}>
@@ -65,7 +70,11 @@ function Dashboard() {
                   <td>{appt.specialization}</td>
                   <td>{appt.appointmentDate}</td>
                   <td>
-                    <span className={`badge ${getStatusBadgeClass(appt.status)}`}>
+                    <span
+                      className={`badge ${getStatusBadgeClass(
+                        appt.status
+                      )}`}
+                    >
                       {appt.status}
                     </span>
                   </td>
