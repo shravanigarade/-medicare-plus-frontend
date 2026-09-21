@@ -10,7 +10,7 @@ function Dashboard() {
     const fetchAppointments = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/appointments/my/${user.id}`
+          https://medicare-plus-backend-1.onrender.com/api/appointments/my/${user.id}`
         );
         setAppointments(response.data);
       } catch (error) {

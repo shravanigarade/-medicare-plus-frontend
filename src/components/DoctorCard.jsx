@@ -29,7 +29,7 @@ function DoctorCard({ doctor }) {
     try {
       const user = JSON.parse(localStorage.getItem('user'));
 
-      await axios.post('http://localhost:5000/api/appointments/book', {
+      await axios.post(https://medicare-plus-backend-1.onrender.com/api/appointments/book, {
         patientId: user.id,
         doctorName: doctor.name,
         specialization: doctor.specialization,
