@@ -11,10 +11,12 @@ function DoctorCard({ doctor }) {
 
   const handleBookClick = () => {
     const token = localStorage.getItem('token');
+
     if (!token) {
       navigate('/login');
       return;
     }
+
     setShowModal(true);
     setMessage('');
   };
@@ -29,12 +31,15 @@ function DoctorCard({ doctor }) {
     try {
       const user = JSON.parse(localStorage.getItem('user'));
 
-      await axios.post(https://medicare-plus-backend-1.onrender.com/api/appointments/book, {
-        patientId: user.id,
-        doctorName: doctor.name,
-        specialization: doctor.specialization,
-        appointmentDate: selectedDate,
-      });
+      await axios.post(
+        `https://medicare-plus-backend-1.onrender.com/api/appointments/book`,
+        {
+          patientId: user.id,
+          doctorName: doctor.name,
+          specialization: doctor.specialization,
+          appointmentDate: selectedDate,
+        }
+      );
 
       setMessage('Appointment booked successfully!');
       setIsError(false);
@@ -45,6 +50,7 @@ function DoctorCard({ doctor }) {
         setMessage('');
       }, 1500);
     } catch (error) {
+      console.error('Booking error:', error);
       setMessage('Failed to book appointment. Please try again.');
       setIsError(true);
     }
@@ -60,11 +66,24 @@ function DoctorCard({ doctor }) {
             alt={doctor.name}
             style={{ height: '220px', objectFit: 'cover' }}
           />
+
           <div className="card-body text-center">
-            <h5 className="card-title mb-1">{doctor.name}</h5>
-            <p className="text-primary mb-1">{doctor.specialization}</p>
-            <p className="text-muted small mb-3">{doctor.experience} years experience</p>
-            <button className="btn btn-primary w-100" onClick={handleBookClick}>
+            <h5 className="card-title mb-1">
+              {doctor.name}
+            </h5>
+
+            <p className="text-primary mb-1">
+              {doctor.specialization}
+            </p>
+
+            <p className="text-muted small mb-3">
+              {doctor.experience} years experience
+            </p>
+
+            <button
+              className="btn btn-primary w-100"
+              onClick={handleBookClick}
+            >
               Book Appointment
             </button>
           </div>
@@ -80,21 +99,34 @@ function DoctorCard({ doctor }) {
         >
           <div className="modal-dialog modal-dialog-centered">
             <div className="modal-content">
+
               <div className="modal-header">
-                <h5 className="modal-title">Book Appointment with {doctor.name}</h5>
+                <h5 className="modal-title">
+                  Book Appointment with {doctor.name}
+                </h5>
+
                 <button
                   type="button"
                   className="btn-close"
                   onClick={() => setShowModal(false)}
                 ></button>
               </div>
+
               <div className="modal-body">
                 {message && (
-                  <div className={`alert ${isError ? 'alert-danger' : 'alert-success'}`}>
+                  <div
+                    className={`alert ${
+                      isError ? 'alert-danger' : 'alert-success'
+                    }`}
+                  >
                     {message}
                   </div>
                 )}
-                <label className="form-label">Select Appointment Date</label>
+
+                <label className="form-label">
+                  Select Appointment Date
+                </label>
+
                 <input
                   type="date"
                   className="form-control"
@@ -103,6 +135,7 @@ function DoctorCard({ doctor }) {
                   onChange={(e) => setSelectedDate(e.target.value)}
                 />
               </div>
+
               <div className="modal-footer">
                 <button
                   className="btn btn-secondary"
@@ -110,10 +143,15 @@ function DoctorCard({ doctor }) {
                 >
                   Cancel
                 </button>
-                <button className="btn btn-primary" onClick={handleConfirmBooking}>
+
+                <button
+                  className="btn btn-primary"
+                  onClick={handleConfirmBooking}
+                >
                   Confirm Booking
                 </button>
               </div>
+
             </div>
           </div>
         </div>
