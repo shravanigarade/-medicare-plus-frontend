@@ -7,6 +7,7 @@ import Register from './pages/Register';
 import Doctors from './pages/Doctors';
 import Dashboard from './pages/Dashboard';
 import PrivateRoute from './components/PrivateRoute';
+import Pharmacy from './pages/Pharmacy';
 
 function Navbar() {
   const navigate = useNavigate();
@@ -48,6 +49,9 @@ function Navbar() {
             <Link className="btn btn-outline-light me-lg-2 mb-2 mb-lg-0" to="/doctors">
               Find Doctors
             </Link>
+            <Link className="btn btn-outline-light me-lg-2 mb-2 mb-lg-0" to="/pharmacy">
+  🛒 Pharmacy
+</Link>
 
             {user ? (
               <>
@@ -88,6 +92,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/doctors" element={<Doctors />} />
+        <Route path="/pharmacy" element={<Pharmacy />} />
         <Route
           path="/dashboard"
           element={
