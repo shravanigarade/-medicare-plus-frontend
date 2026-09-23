@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import axios from 'axios';
 
 function Pharmacy() {
   const [search, setSearch] = useState('');
   const [cart, setCart] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const medicines = [
     {
@@ -62,17 +64,54 @@ function Pharmacy() {
     setCart(updatedCart);
   };
 
-  const total = cart.reduce((sum, medicine) => sum + medicine.price, 0);
+  const total = cart.reduce(
+    (sum, medicine) => sum + medicine.price,
+    0
+  );
 
-  const handleOrder = () => {
+  const handleOrder = async () => {
     if (cart.length === 0) {
       alert('Please add medicine to cart first.');
       return;
     }
 
-    alert('Order placed successfully!');
+    const user = JSON.parse(localStorage.getItem('user'));
 
-    setCart([]);
+    if (!user || !user.id) {
+      alert('Please login first.');
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const orderData = {
+        patientId: user.id,
+        medicines: cart.map((medicine) => ({
+          name: medicine.name,
+          price: medicine.price,
+        })),
+        totalAmount: total,
+      };
+
+      const response = await axios.post(
+        'https://medicare-plus-backend-1.onrender.com/api/orders/create',
+        orderData
+      );
+
+      alert(response.data.message);
+
+      setCart([]);
+    } catch (error) {
+      console.error('Order Error:', error);
+
+      alert(
+        error.response?.data?.message ||
+          'Failed to place order. Please try again.'
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -165,6 +204,7 @@ function Pharmacy() {
         <div className="col-lg-4">
 
           <div className="card shadow-sm sticky-top">
+
             <div className="card-header bg-primary text-white">
               <h5 className="mb-0">
                 🛒 Your Cart
@@ -185,9 +225,12 @@ function Pharmacy() {
                       key={index}
                       className="d-flex justify-content-between align-items-center border-bottom py-2"
                     >
+
                       <div>
                         <strong>{medicine.name}</strong>
+
                         <br />
+
                         <small className="text-muted">
                           ₹{medicine.price}
                         </small>
@@ -199,6 +242,7 @@ function Pharmacy() {
                       >
                         Remove
                       </button>
+
                     </div>
 
                   ))}
@@ -213,9 +257,11 @@ function Pharmacy() {
                   <button
                     className="btn btn-success w-100 mt-3"
                     onClick={handleOrder}
+                    disabled={loading}
                   >
-                    Place Order
+                    {loading ? 'Placing Order...' : 'Place Order'}
                   </button>
+
                 </>
               )}
 
