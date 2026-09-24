@@ -95,7 +95,7 @@ function Pharmacy() {
       };
 
       const response = await axios.post(
-        'https://medicare-plus-backend-1.onrender.com/api/orders/create',
+        'https://medicare-plus-backend-egq7.onrender.com/api/orders/create',
         orderData
       );
 
