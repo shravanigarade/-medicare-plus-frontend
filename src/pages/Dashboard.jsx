@@ -13,7 +13,7 @@ function Dashboard() {
     const fetchAppointments = async () => {
       try {
         const response = await axios.get(
-          `https://medicare-plus-backend-1.onrender.com/api/appointments/my/${user.id}`
+          `https://medicare-plus-backend-egq7.onrender.com/api/appointments/my/${user.id}`
         );
 
         setAppointments(response.data);
@@ -27,7 +27,7 @@ function Dashboard() {
     const fetchOrders = async () => {
       try {
         const response = await axios.get(
-          `https://medicare-plus-backend-1.onrender.com/api/orders/my/${user.id}`
+          `https://medicare-plus-backend-egq7.onrender.com/api/orders/my/${user.id}`
         );
 
         setOrders(response.data);
@@ -51,13 +51,10 @@ function Dashboard() {
     switch (status) {
       case 'confirmed':
         return 'bg-success';
-
       case 'completed':
         return 'bg-primary';
-
       case 'cancelled':
         return 'bg-danger';
-
       default:
         return 'bg-warning text-dark';
     }
@@ -67,13 +64,10 @@ function Dashboard() {
     switch (status) {
       case 'delivered':
         return 'bg-success';
-
       case 'processing':
         return 'bg-primary';
-
       case 'cancelled':
         return 'bg-danger';
-
       default:
         return 'bg-warning text-dark';
     }
@@ -82,7 +76,6 @@ function Dashboard() {
   return (
     <div className="container py-5">
 
-      {/* Dashboard Header */}
       <h2 className="fw-bold mb-2">
         My Dashboard
       </h2>
@@ -91,7 +84,7 @@ function Dashboard() {
         Welcome back, {user?.name}!
       </p>
 
-      {/* ================= APPOINTMENTS ================= */}
+      {/* APPOINTMENTS */}
 
       <h4 className="mb-3">
         🩺 My Appointments
@@ -121,17 +114,11 @@ function Dashboard() {
               {appointments.map((appt) => (
                 <tr key={appt._id}>
 
-                  <td>
-                    {appt.doctorName}
-                  </td>
+                  <td>{appt.doctorName}</td>
 
-                  <td>
-                    {appt.specialization}
-                  </td>
+                  <td>{appt.specialization}</td>
 
-                  <td>
-                    {appt.appointmentDate}
-                  </td>
+                  <td>{appt.appointmentDate}</td>
 
                   <td>
                     <span
@@ -152,7 +139,7 @@ function Dashboard() {
         </div>
       )}
 
-      {/* ================= ORDERS ================= */}
+      {/* MEDICINE ORDERS */}
 
       <h4 className="mb-3">
         💊 My Medicine Orders
