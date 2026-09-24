@@ -15,6 +15,7 @@ import Register from './pages/Register';
 import Doctors from './pages/Doctors';
 import Dashboard from './pages/Dashboard';
 import Pharmacy from './pages/Pharmacy';
+import Admin from './pages/Admin';
 import PrivateRoute from './components/PrivateRoute';
 
 function Navbar() {
@@ -87,6 +88,16 @@ function Navbar() {
                 >
                   Dashboard
                 </Link>
+
+                {/* Admin */}
+                {user.role === 'admin' && (
+                  <Link
+                    className="btn btn-warning me-lg-2 mb-2 mb-lg-0"
+                    to="/admin"
+                  >
+                    🛡️ Admin
+                  </Link>
+                )}
 
                 {/* User Name */}
                 <span className="text-white me-lg-3 mb-2 mb-lg-0">
@@ -176,6 +187,16 @@ function App() {
           element={
             <PrivateRoute>
               <Dashboard />
+            </PrivateRoute>
+          }
+        />
+
+        {/* Admin Dashboard - Login Required */}
+        <Route
+          path="/admin"
+          element={
+            <PrivateRoute>
+              <Admin />
             </PrivateRoute>
           }
         />
