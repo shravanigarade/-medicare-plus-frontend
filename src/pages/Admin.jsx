@@ -9,27 +9,73 @@ function Admin() {
   const backendURL = 'https://medicare-plus-backend-egq7.onrender.com';
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const appointmentsResponse = await axios.get(
-          `${backendURL}/api/appointments/all`
-        );
-
-        const ordersResponse = await axios.get(
-          `${backendURL}/api/orders/all`
-        );
-
-        setAppointments(appointmentsResponse.data);
-        setOrders(ordersResponse.data);
-      } catch (error) {
-        console.error('Admin data error:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchData();
   }, []);
+
+  const fetchData = async () => {
+    try {
+      const appointmentsResponse = await axios.get(
+        `${backendURL}/api/appointments/all`
+      );
+
+      const ordersResponse = await axios.get(
+        `${backendURL}/api/orders/all`
+      );
+
+      setAppointments(appointmentsResponse.data);
+      setOrders(ordersResponse.data);
+    } catch (error) {
+      console.error('Admin data error:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Update appointment status
+  const updateAppointmentStatus = async (id, status) => {
+    try {
+      await axios.put(
+        `${backendURL}/api/appointments/status/${id}`,
+        { status }
+      );
+
+      setAppointments((prev) =>
+        prev.map((appointment) =>
+          appointment._id === id
+            ? { ...appointment, status }
+            : appointment
+        )
+      );
+
+      alert('Appointment status updated!');
+    } catch (error) {
+      console.error('Appointment status error:', error);
+      alert('Failed to update appointment status.');
+    }
+  };
+
+  // Update order status
+  const updateOrderStatus = async (id, status) => {
+    try {
+      await axios.put(
+        `${backendURL}/api/orders/status/${id}`,
+        { status }
+      );
+
+      setOrders((prev) =>
+        prev.map((order) =>
+          order._id === id
+            ? { ...order, status }
+            : order
+        )
+      );
+
+      alert('Order status updated!');
+    } catch (error) {
+      console.error('Order status error:', error);
+      alert('Failed to update order status.');
+    }
+  };
 
   if (loading) {
     return (
@@ -67,7 +113,8 @@ function Admin() {
           <div className="card shadow-sm p-4">
             <h5>Total Revenue</h5>
             <h2>
-              ₹{orders.reduce(
+              ₹
+              {orders.reduce(
                 (total, order) => total + order.totalAmount,
                 0
               )}
@@ -124,9 +171,21 @@ function Admin() {
                   </td>
 
                   <td>
-                    <span className="badge bg-warning text-dark">
-                      {appointment.status}
-                    </span>
+                    <select
+                      className="form-select form-select-sm"
+                      value={appointment.status}
+                      onChange={(e) =>
+                        updateAppointmentStatus(
+                          appointment._id,
+                          e.target.value
+                        )
+                      }
+                    >
+                      <option value="pending">Pending</option>
+                      <option value="confirmed">Confirmed</option>
+                      <option value="completed">Completed</option>
+                      <option value="cancelled">Cancelled</option>
+                    </select>
                   </td>
 
                 </tr>
@@ -154,7 +213,7 @@ function Admin() {
             >
               <div className="card shadow-sm h-100">
 
-                <div className="card-header d-flex justify-content-between">
+                <div className="card-header d-flex justify-content-between align-items-center">
                   <strong>
                     Order #{order._id.slice(-6).toUpperCase()}
                   </strong>
@@ -191,6 +250,29 @@ function Admin() {
                   <div className="d-flex justify-content-between mt-3">
                     <strong>Total</strong>
                     <strong>₹{order.totalAmount}</strong>
+                  </div>
+
+                  {/* Order Status */}
+                  <div className="mt-3">
+                    <label className="form-label fw-bold">
+                      Update Order Status
+                    </label>
+
+                    <select
+                      className="form-select"
+                      value={order.status}
+                      onChange={(e) =>
+                        updateOrderStatus(
+                          order._id,
+                          e.target.value
+                        )
+                      }
+                    >
+                      <option value="placed">Placed</option>
+                      <option value="processing">Processing</option>
+                      <option value="delivered">Delivered</option>
+                      <option value="cancelled">Cancelled</option>
+                    </select>
                   </div>
 
                 </div>
