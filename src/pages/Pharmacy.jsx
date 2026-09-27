@@ -60,8 +60,7 @@ function Pharmacy() {
   };
 
   const removeFromCart = (index) => {
-    const updatedCart = cart.filter((_, i) => i !== index);
-    setCart(updatedCart);
+    setCart(cart.filter((_, i) => i !== index));
   };
 
   const total = cart.reduce(
@@ -100,7 +99,6 @@ function Pharmacy() {
       );
 
       alert(response.data.message);
-
       setCart([]);
     } catch (error) {
       console.error('Order Error:', error);
@@ -115,161 +113,155 @@ function Pharmacy() {
   };
 
   return (
-    <div className="container py-5">
+    <div className="pharmacy-page">
+      <div className="pharmacy-container">
 
-      {/* Header */}
-      <div className="text-center mb-5">
-        <h2 className="fw-bold">Online Pharmacy</h2>
+        {/* HEADER */}
+        <div className="pharmacy-header">
+          <span>MEDICARE+ PHARMACY</span>
 
-        <p className="text-muted">
-          Order your medicines easily from MediCare+
-        </p>
-      </div>
+          <h1>Online Pharmacy</h1>
 
-      {/* Search */}
-      <div className="row mb-4">
-        <div className="col-md-8 mx-auto">
+          <p>
+            Order your medicines easily and manage your healthcare
+            essentials from one place.
+          </p>
+        </div>
+
+        {/* SEARCH */}
+        <div className="pharmacy-search">
           <input
             type="text"
-            className="form-control form-control-lg"
-            placeholder="🔍 Search medicines..."
+            placeholder="🔍  Search medicines..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-      </div>
 
-      <div className="row">
+        <div className="row">
 
-        {/* Medicine List */}
-        <div className="col-lg-8">
+          {/* MEDICINES */}
+          <div className="col-lg-8">
+            <div className="row">
 
-          <div className="row">
+              {filteredMedicines.length === 0 ? (
+                <div className="text-center py-5">
+                  <h5>No medicines found</h5>
+                  <p className="text-muted">
+                    Try searching with another medicine name.
+                  </p>
+                </div>
+              ) : (
+                filteredMedicines.map((medicine) => (
+                  <div
+                    className="col-md-6 mb-4"
+                    key={medicine.id}
+                  >
+                    <div className="medicine-card">
 
-            {filteredMedicines.length === 0 ? (
-              <div className="text-center">
-                <p className="text-muted">
-                  No medicines found.
-                </p>
-              </div>
-            ) : (
-              filteredMedicines.map((medicine) => (
+                      <div className="medicine-icon">
+                        💊
+                      </div>
 
-                <div
-                  className="col-md-6 mb-4"
-                  key={medicine.id}
-                >
-                  <div className="card h-100 shadow-sm">
-
-                    <div className="card-body">
-
-                      <span className="badge bg-primary mb-2">
+                      <span className="medicine-category">
                         {medicine.category}
                       </span>
 
-                      <h5 className="card-title">
-                        {medicine.name}
-                      </h5>
+                      <h3>{medicine.name}</h3>
 
-                      <p className="text-muted">
-                        {medicine.description}
-                      </p>
+                      <p>{medicine.description}</p>
 
-                      <div className="d-flex justify-content-between align-items-center">
-
-                        <h5 className="mb-0">
+                      <div className="d-flex justify-content-between align-items-center mt-4">
+                        <span className="medicine-price">
                           ₹{medicine.price}
-                        </h5>
+                        </span>
 
                         <button
-                          className="btn btn-primary"
+                          className="medicine-add-btn"
                           onClick={() => addToCart(medicine)}
                         >
                           Add to Cart
                         </button>
-
                       </div>
 
                     </div>
                   </div>
-                </div>
-
-              ))
-            )}
-
-          </div>
-        </div>
-
-        {/* Cart */}
-        <div className="col-lg-4">
-
-          <div className="card shadow-sm sticky-top">
-
-            <div className="card-header bg-primary text-white">
-              <h5 className="mb-0">
-                🛒 Your Cart
-              </h5>
-            </div>
-
-            <div className="card-body">
-
-              {cart.length === 0 ? (
-                <p className="text-muted text-center">
-                  Your cart is empty.
-                </p>
-              ) : (
-                <>
-                  {cart.map((medicine, index) => (
-
-                    <div
-                      key={index}
-                      className="d-flex justify-content-between align-items-center border-bottom py-2"
-                    >
-
-                      <div>
-                        <strong>{medicine.name}</strong>
-
-                        <br />
-
-                        <small className="text-muted">
-                          ₹{medicine.price}
-                        </small>
-                      </div>
-
-                      <button
-                        className="btn btn-sm btn-outline-danger"
-                        onClick={() => removeFromCart(index)}
-                      >
-                        Remove
-                      </button>
-
-                    </div>
-
-                  ))}
-
-                  <hr />
-
-                  <div className="d-flex justify-content-between">
-                    <strong>Total:</strong>
-                    <strong>₹{total}</strong>
-                  </div>
-
-                  <button
-                    className="btn btn-success w-100 mt-3"
-                    onClick={handleOrder}
-                    disabled={loading}
-                  >
-                    {loading ? 'Placing Order...' : 'Place Order'}
-                  </button>
-
-                </>
+                ))
               )}
 
             </div>
           </div>
 
-        </div>
+          {/* CART */}
+          <div className="col-lg-4">
 
+            <div className="pharmacy-cart">
+
+              <div className="pharmacy-cart-header">
+                🛒 Your Cart
+              </div>
+
+              <div className="pharmacy-cart-body">
+
+                {cart.length === 0 ? (
+                  <div className="text-center py-3">
+                    <div style={{ fontSize: '35px' }}>
+                      🛒
+                    </div>
+
+                    <p className="text-muted mb-0">
+                      Your cart is empty.
+                    </p>
+                  </div>
+                ) : (
+                  <>
+                    {cart.map((medicine, index) => (
+                      <div
+                        key={index}
+                        className="cart-item"
+                      >
+                        <div>
+                          <div className="cart-item-name">
+                            {medicine.name}
+                          </div>
+
+                          <div className="cart-item-price">
+                            ₹{medicine.price}
+                          </div>
+                        </div>
+
+                        <button
+                          className="cart-remove"
+                          onClick={() => removeFromCart(index)}
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    ))}
+
+                    <div className="cart-total">
+                      <strong>Total</strong>
+                      <strong>₹{total}</strong>
+                    </div>
+
+                    <button
+                      className="place-order-btn"
+                      onClick={handleOrder}
+                      disabled={loading}
+                    >
+                      {loading
+                        ? 'Placing Order...'
+                        : 'Place Order'}
+                    </button>
+                  </>
+                )}
+
+              </div>
+            </div>
+
+          </div>
+
+        </div>
       </div>
     </div>
   );

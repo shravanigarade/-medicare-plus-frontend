@@ -5,7 +5,7 @@ const dummyDoctors = [
     specialization: 'Cardiologist',
     experience: 8,
     about: 'Heart diseases, blood pressure, chest pain, ECG',
-    image: 'https://randomuser.me/api/portraits/women/45.jpg',
+    image: 'https://images.pexels.com/photos/32254667/pexels-photo-32254667.jpeg',
   },
   {
     id: 2,
@@ -13,7 +13,7 @@ const dummyDoctors = [
     specialization: 'Dermatologist',
     experience: 5,
     about: 'Skin, hair, acne, allergies, rashes',
-    image: 'https://randomuser.me/api/portraits/men/32.jpg',
+    image: 'https://images.pexels.com/photos/37272297/pexels-photo-37272297.jpeg',
   },
   {
     id: 3,
@@ -21,7 +21,7 @@ const dummyDoctors = [
     specialization: 'Pediatrician',
     experience: 10,
     about: 'Child health, vaccination, infant care',
-    image: 'https://randomuser.me/api/portraits/women/68.jpg',
+    image: 'https://images.pexels.com/photos/36103795/pexels-photo-36103795.jpeg',
   },
   {
     id: 4,
@@ -29,7 +29,7 @@ const dummyDoctors = [
     specialization: 'Orthopedic',
     experience: 6,
     about: 'Bone fractures, joint pain, arthritis, sports injury',
-    image: 'https://randomuser.me/api/portraits/men/76.jpg',
+    image: 'https://images.pexels.com/photos/6129500/pexels-photo-6129500.jpeg',
   },
   {
     id: 5,
@@ -37,7 +37,7 @@ const dummyDoctors = [
     specialization: 'Neurologist',
     experience: 12,
     about: 'Headache, migraine, seizures, nerve disorders',
-    image: 'https://randomuser.me/api/portraits/women/33.jpg',
+    image: 'https://images.pexels.com/photos/15752232/pexels-photo-15752232.jpeg',
   },
   {
     id: 6,
@@ -45,7 +45,7 @@ const dummyDoctors = [
     specialization: 'Gastroenterologist',
     experience: 9,
     about: 'Stomach pain, acidity, digestion, liver issues',
-    image: 'https://randomuser.me/api/portraits/men/54.jpg',
+    image: 'https://images.pexels.com/photos/6762862/pexels-photo-6762862.jpeg',
   },
   {
     id: 7,
@@ -53,7 +53,7 @@ const dummyDoctors = [
     specialization: 'Gynecologist',
     experience: 11,
     about: "Women's health, pregnancy care, menstrual issues",
-    image: 'https://randomuser.me/api/portraits/women/22.jpg',
+    image: 'https://images.pexels.com/photos/7904463/pexels-photo-7904463.jpeg',
   },
   {
     id: 8,
@@ -61,7 +61,7 @@ const dummyDoctors = [
     specialization: 'ENT Specialist',
     experience: 7,
     about: 'Ear, nose, throat infections, hearing issues',
-    image: 'https://randomuser.me/api/portraits/men/41.jpg',
+    image: 'https://images.pexels.com/photos/19438558/pexels-photo-19438558.jpeg',
   },
   {
     id: 9,
@@ -69,7 +69,7 @@ const dummyDoctors = [
     specialization: 'Psychiatrist',
     experience: 8,
     about: 'Anxiety, depression, stress, sleep disorders',
-    image: 'https://randomuser.me/api/portraits/women/56.jpg',
+    image: 'https://images.pexels.com/photos/37454250/pexels-photo-37454250.jpeg',
   },
   {
     id: 10,
@@ -77,7 +77,7 @@ const dummyDoctors = [
     specialization: 'Dentist',
     experience: 6,
     about: 'Toothache, cavities, gum disease, braces',
-    image: 'https://randomuser.me/api/portraits/men/29.jpg',
+    image: 'https://images.pexels.com/photos/26886763/pexels-photo-26886763.jpeg',
   },
   {
     id: 11,
@@ -85,7 +85,7 @@ const dummyDoctors = [
     specialization: 'Ophthalmologist',
     experience: 9,
     about: 'Eye checkups, vision problems, cataract',
-    image: 'https://randomuser.me/api/portraits/women/71.jpg',
+    image: 'https://images.pexels.com/photos/37454251/pexels-photo-37454251.jpeg',
   },
   {
     id: 12,
@@ -93,7 +93,7 @@ const dummyDoctors = [
     specialization: 'General Physician',
     experience: 14,
     about: 'Fever, cold, cough, general health checkups',
-    image: 'https://randomuser.me/api/portraits/men/85.jpg',
+    image: 'https://images.pexels.com/photos/14438788/pexels-photo-14438788.jpeg',
   },
 ];
 

@@ -2,41 +2,186 @@ import { Link } from 'react-router-dom';
 
 function Home() {
   return (
-    <div>
-      {/* Hero Section */}
-      <div
-        className="d-flex flex-column justify-content-center align-items-center text-center text-white"
-        style={{
-          minHeight: '80vh',
-          background: 'linear-gradient(135deg, #0d6efd, #6610f2)',
-        }}
-      >
-        <h1 className="display-4 fw-bold mb-3">Your Health, Our Priority</h1>
-        <p className="lead mb-4" style={{ maxWidth: '600px' }}>
-          Find the best doctors near you and book appointments in just a few clicks.
-        </p>
-        <Link to="/doctors" className="btn btn-light btn-lg px-4 hero-btn">
-          Find a Doctor
-        </Link>
-      </div>
+    <div className="home-page">
 
-      {/* Info Section */}
-      <div className="container py-5">
-        <div className="row text-center">
-          <div className="col-md-4 mb-4">
-            <h4>🔍 Search Doctors</h4>
-            <p className="text-muted">Browse doctors by specialization and experience.</p>
+      {/* HERO SECTION */}
+      <section className="hero-section">
+        <div className="hero-content">
+          <div className="hero-text">
+            <span className="hero-badge">🩺 Trusted Healthcare Platform</span>
+
+            <h1>
+              Your Health,
+              <br />
+              <span>Our Priority</span>
+            </h1>
+
+            <p>
+              Find trusted doctors, book appointments and order medicines
+              online — all in one place.
+            </p>
+
+            <div className="hero-buttons">
+              <Link to="/doctors" className="primary-btn">
+                Find a Doctor →
+              </Link>
+
+              <Link to="/pharmacy" className="secondary-btn">
+                💊 Order Medicines
+              </Link>
+            </div>
+
+            <div className="hero-trust">
+              <span>✓ Easy Booking</span>
+              <span>✓ Trusted Doctors</span>
+              <span>✓ Online Pharmacy</span>
+            </div>
           </div>
-          <div className="col-md-4 mb-4">
-            <h4>📅 Book Instantly</h4>
-            <p className="text-muted">Choose a slot and confirm your appointment in seconds.</p>
-          </div>
-          <div className="col-md-4 mb-4">
-            <h4>📋 Track History</h4>
-            <p className="text-muted">View your past appointments and prescriptions anytime.</p>
+
+          <div className="hero-image">
+            <div className="doctor-circle">
+              👨‍⚕️
+            </div>
+
+            <div className="floating-card card-one">
+              📅 <span>Easy Appointments</span>
+            </div>
+
+            <div className="floating-card card-two">
+              💊 <span>Online Pharmacy</span>
+            </div>
           </div>
         </div>
-      </div>
+      </section>
+
+      {/* SERVICES */}
+      <section className="services-section">
+        <div className="section-heading">
+          <span>OUR SERVICES</span>
+          <h2>Healthcare made simple</h2>
+          <p>
+            Everything you need for your healthcare journey in one place.
+          </p>
+        </div>
+
+        <div className="service-grid">
+
+          <div className="service-card">
+            <div className="service-icon">🩺</div>
+            <h3>Find Doctors</h3>
+            <p>
+              Browse doctors by specialization and choose the right doctor
+              for your needs.
+            </p>
+            <Link to="/doctors">Explore Doctors →</Link>
+          </div>
+
+          <div className="service-card">
+            <div className="service-icon">📅</div>
+            <h3>Book Appointment</h3>
+            <p>
+              Select a doctor and book your appointment quickly and easily.
+            </p>
+            <Link to="/doctors">Book Now →</Link>
+          </div>
+
+          <div className="service-card">
+            <div className="service-icon">💊</div>
+            <h3>Online Pharmacy</h3>
+            <p>
+              Browse medicines and place your order from the comfort of
+              your home.
+            </p>
+            <Link to="/pharmacy">Shop Medicines →</Link>
+          </div>
+
+          <div className="service-card">
+            <div className="service-icon">📋</div>
+            <h3>Track Your History</h3>
+            <p>
+              View your appointments and medicine orders from your dashboard.
+            </p>
+            <Link to="/dashboard">View Dashboard →</Link>
+          </div>
+
+        </div>
+      </section>
+
+      {/* WHY MEDICARE */}
+      <section className="why-section">
+        <div className="why-content">
+
+          <div className="why-image">
+            <div className="medical-illustration">
+              ❤️
+            </div>
+          </div>
+
+          <div className="why-text">
+            <span>WHY MEDICARE+</span>
+
+            <h2>
+              Healthcare that puts
+              <br />
+              <strong>you first.</strong>
+            </h2>
+
+            <p>
+              MediCare+ brings doctors, appointments and medicines together
+              in one simple platform designed for a better healthcare
+              experience.
+            </p>
+
+            <div className="why-points">
+              <div>
+                <b>✓</b>
+                <span>Simple & easy appointment booking</span>
+              </div>
+
+              <div>
+                <b>✓</b>
+                <span>Convenient online medicine ordering</span>
+              </div>
+
+              <div>
+                <b>✓</b>
+                <span>Manage everything from your dashboard</span>
+              </div>
+            </div>
+
+            <Link to="/doctors" className="primary-btn">
+              Get Started →
+            </Link>
+          </div>
+
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="cta-section">
+        <h2>Take care of your health today.</h2>
+        <p>
+          Find a doctor or order your medicines with MediCare+.
+        </p>
+
+        <div className="cta-buttons">
+          <Link to="/doctors">Find a Doctor</Link>
+          <Link to="/pharmacy">Visit Pharmacy</Link>
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer className="home-footer">
+        <div>
+          <h3>🩺 MediCare+</h3>
+          <p>Your health, our priority.</p>
+        </div>
+
+        <div>
+          <p>© 2026 MediCare+. All rights reserved.</p>
+        </div>
+      </footer>
+
     </div>
   );
 }

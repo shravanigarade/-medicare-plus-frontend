@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 function Register() {
@@ -30,8 +31,8 @@ function Register() {
 
     if (!formData.email.trim()) {
       newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email format is invalid';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email address';
     }
 
     if (!formData.phone.trim()) {
@@ -46,7 +47,9 @@ function Register() {
       newErrors.password = 'Password must be at least 6 characters';
     }
 
-    if (formData.confirmPassword !== formData.password) {
+    if (!formData.confirmPassword) {
+      newErrors.confirmPassword = 'Please confirm your password';
+    } else if (formData.confirmPassword !== formData.password) {
       newErrors.confirmPassword = 'Passwords do not match';
     }
 
@@ -73,9 +76,9 @@ function Register() {
       const response = await axios.post(
         'https://medicare-plus-backend-egq7.onrender.com/api/auth/register',
         {
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          phone: formData.phone.trim(),
           password: formData.password,
         }
       );
@@ -95,7 +98,9 @@ function Register() {
       if (error.response?.data?.message) {
         setServerError(error.response.data.message);
       } else {
-        setServerError('Something went wrong. Please try again.');
+        setServerError(
+          'Something went wrong. Please try again.'
+        );
       }
 
       setSuccessMessage('');
@@ -103,102 +108,146 @@ function Register() {
   };
 
   return (
-    <div className="container py-5" style={{ maxWidth: '500px' }}>
-      <h2 className="text-center fw-bold mb-4">
-        Create an Account
-      </h2>
+    <div className="auth-page">
+      <div className="auth-card register-card">
 
-      {successMessage && (
-        <div className="alert alert-success">
-          ✅ {successMessage}
-        </div>
-      )}
-
-      {serverError && (
-        <div className="alert alert-danger">
-          ❌ {serverError}
-        </div>
-      )}
-
-      <form onSubmit={handleSubmit} noValidate>
-        <div className="mb-3">
-          <label className="form-label">Full Name</label>
-          <input
-            type="text"
-            name="name"
-            className={`form-control ${errors.name ? 'is-invalid' : ''}`}
-            value={formData.name}
-            onChange={handleChange}
-          />
-          {errors.name && (
-            <div className="invalid-feedback">{errors.name}</div>
-          )}
+        <div className="auth-icon">
+          🩺
         </div>
 
-        <div className="mb-3">
-          <label className="form-label">Email Address</label>
-          <input
-            type="text"
-            name="email"
-            className={`form-control ${errors.email ? 'is-invalid' : ''}`}
-            value={formData.email}
-            onChange={handleChange}
-          />
-          {errors.email && (
-            <div className="invalid-feedback">{errors.email}</div>
-          )}
+        <div className="auth-heading">
+          <span>JOIN MEDICARE+</span>
+
+          <h1>Create your account</h1>
+
+          <p>
+            Register to book appointments and manage your
+            healthcare services.
+          </p>
         </div>
 
-        <div className="mb-3">
-          <label className="form-label">Phone Number</label>
-          <input
-            type="text"
-            name="phone"
-            className={`form-control ${errors.phone ? 'is-invalid' : ''}`}
-            value={formData.phone}
-            onChange={handleChange}
-          />
-          {errors.phone && (
-            <div className="invalid-feedback">{errors.phone}</div>
-          )}
+        {successMessage && (
+          <div className="auth-success">
+            ✅ {successMessage}
+          </div>
+        )}
+
+        {serverError && (
+          <div className="auth-error">
+            ❌ {serverError}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} noValidate>
+
+          <div className="auth-field">
+            <label>Full Name</label>
+
+            <input
+              type="text"
+              name="name"
+              placeholder="Enter your full name"
+              className={errors.name ? 'input-error' : ''}
+              value={formData.name}
+              onChange={handleChange}
+            />
+
+            {errors.name && (
+              <small>{errors.name}</small>
+            )}
+          </div>
+
+          <div className="auth-field">
+            <label>Email Address</label>
+
+            <input
+              type="email"
+              name="email"
+              placeholder="Enter your email"
+              className={errors.email ? 'input-error' : ''}
+              value={formData.email}
+              onChange={handleChange}
+            />
+
+            {errors.email && (
+              <small>{errors.email}</small>
+            )}
+          </div>
+
+          <div className="auth-field">
+            <label>Phone Number</label>
+
+            <input
+              type="tel"
+              name="phone"
+              placeholder="Enter 10-digit phone number"
+              className={errors.phone ? 'input-error' : ''}
+              value={formData.phone}
+              onChange={handleChange}
+            />
+
+            {errors.phone && (
+              <small>{errors.phone}</small>
+            )}
+          </div>
+
+          <div className="auth-field">
+            <label>Password</label>
+
+            <input
+              type="password"
+              name="password"
+              placeholder="Create a password"
+              className={errors.password ? 'input-error' : ''}
+              value={formData.password}
+              onChange={handleChange}
+            />
+
+            {errors.password && (
+              <small>{errors.password}</small>
+            )}
+          </div>
+
+          <div className="auth-field">
+            <label>Confirm Password</label>
+
+            <input
+              type="password"
+              name="confirmPassword"
+              placeholder="Confirm your password"
+              className={
+                errors.confirmPassword ? 'input-error' : ''
+              }
+              value={formData.confirmPassword}
+              onChange={handleChange}
+            />
+
+            {errors.confirmPassword && (
+              <small>{errors.confirmPassword}</small>
+            )}
+          </div>
+
+          <button
+            type="submit"
+            className="auth-submit-btn"
+          >
+            Create Account →
+          </button>
+
+        </form>
+
+        <div className="auth-divider">
+          <span>Already have an account?</span>
         </div>
 
-        <div className="mb-3">
-          <label className="form-label">Password</label>
-          <input
-            type="password"
-            name="password"
-            className={`form-control ${errors.password ? 'is-invalid' : ''}`}
-            value={formData.password}
-            onChange={handleChange}
-          />
-          {errors.password && (
-            <div className="invalid-feedback">{errors.password}</div>
-          )}
-        </div>
+        <Link
+          to="/login"
+          className="auth-register-link"
+        >
+          Login to your account
+        </Link>
 
-        <div className="mb-4">
-          <label className="form-label">Confirm Password</label>
-          <input
-            type="password"
-            name="confirmPassword"
-            className={`form-control ${
-              errors.confirmPassword ? 'is-invalid' : ''
-            }`}
-            value={formData.confirmPassword}
-            onChange={handleChange}
-          />
-          {errors.confirmPassword && (
-            <div className="invalid-feedback">
-              {errors.confirmPassword}
-            </div>
-          )}
-        </div>
-
-        <button type="submit" className="btn btn-primary w-100">
-          Register
-        </button>
-      </form>
+      </div>
     </div>
   );
 }

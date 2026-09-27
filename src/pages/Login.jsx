@@ -28,8 +28,7 @@ function Login() {
     if (!trimmedEmail) {
       newErrors.email = 'Email is required';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(trimmedEmail)) {
-      newErrors.email =
-        'Please enter a valid email address (e.g. name@example.com)';
+      newErrors.email = 'Please enter a valid email address';
     }
 
     if (!formData.password) {
@@ -65,10 +64,8 @@ function Login() {
         }
       );
 
-      // Save token
       localStorage.setItem('token', response.data.token);
 
-      // Save logged-in user's information
       localStorage.setItem(
         'user',
         JSON.stringify(response.data.user)
@@ -78,18 +75,13 @@ function Login() {
         response.data.message || 'Login successful!'
       );
 
-      // Go to Dashboard
       setTimeout(() => {
         navigate('/dashboard');
       }, 1000);
     } catch (error) {
       console.error('Login error:', error);
 
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
+      if (error.response?.data?.message) {
         setServerError(error.response.data.message);
       } else {
         setServerError(
@@ -102,100 +94,101 @@ function Login() {
   };
 
   return (
-    <div
-      className="container py-5"
-      style={{ maxWidth: '450px' }}
-    >
-      <h2 className="text-center fw-bold mb-4">
-        Login to MediCare+
-      </h2>
+    <div className="auth-page">
+      <div className="auth-card">
 
-      {successMessage && (
-        <div className="alert alert-success" role="alert">
-          {successMessage}
-        </div>
-      )}
-
-      {serverError && (
-        <div className="alert alert-danger" role="alert">
-          {serverError}
-        </div>
-      )}
-
-      <form onSubmit={handleSubmit} noValidate>
-        <div className="mb-3">
-          <label className="form-label">
-            Email Address
-          </label>
-
-          <input
-            type="text"
-            name="email"
-            className={`form-control ${
-              errors.email ? 'is-invalid' : ''
-            }`}
-            value={formData.email}
-            onChange={handleChange}
-          />
-
-          {errors.email && (
-            <div className="invalid-feedback">
-              {errors.email}
-            </div>
-          )}
+        <div className="auth-icon">
+          🩺
         </div>
 
-        <div className="mb-3">
-          <label className="form-label">
-            Password
-          </label>
-
-          <input
-            type="password"
-            name="password"
-            className={`form-control ${
-              errors.password ? 'is-invalid' : ''
-            }`}
-            value={formData.password}
-            onChange={handleChange}
-          />
-
-          {errors.password && (
-            <div className="invalid-feedback">
-              {errors.password}
-            </div>
-          )}
+        <div className="auth-heading">
+          <span>WELCOME TO MEDICARE+</span>
+          <h1>Login to your account</h1>
+          <p>
+            Access your appointments, orders and healthcare
+            services.
+          </p>
         </div>
 
-        <div className="mb-3 form-check">
-          <input
-            type="checkbox"
-            className="form-check-input"
-            id="rememberMe"
-          />
+        {successMessage && (
+          <div className="auth-success">
+            {successMessage}
+          </div>
+        )}
 
-          <label
-            className="form-check-label"
-            htmlFor="rememberMe"
+        {serverError && (
+          <div className="auth-error">
+            {serverError}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} noValidate>
+
+          <div className="auth-field">
+            <label>Email Address</label>
+
+            <input
+              type="email"
+              name="email"
+              placeholder="Enter your email"
+              className={errors.email ? 'input-error' : ''}
+              value={formData.email}
+              onChange={handleChange}
+            />
+
+            {errors.email && (
+              <small>{errors.email}</small>
+            )}
+          </div>
+
+          <div className="auth-field">
+            <label>Password</label>
+
+            <input
+              type="password"
+              name="password"
+              placeholder="Enter your password"
+              className={errors.password ? 'input-error' : ''}
+              value={formData.password}
+              onChange={handleChange}
+            />
+
+            {errors.password && (
+              <small>{errors.password}</small>
+            )}
+          </div>
+
+          <div className="remember-row">
+            <label>
+              <input
+                type="checkbox"
+                id="rememberMe"
+              />
+              <span>Remember me</span>
+            </label>
+          </div>
+
+          <button
+            type="submit"
+            className="auth-submit-btn"
           >
-            Remember me
-          </label>
+            Login to MediCare+ →
+          </button>
+
+        </form>
+
+        <div className="auth-divider">
+          <span>New to MediCare+?</span>
         </div>
 
-        <button
-          type="submit"
-          className="btn btn-primary w-100 mb-3"
+        <Link
+          to="/register"
+          className="auth-register-link"
         >
-          Login
-        </button>
+          Create an account
+        </Link>
 
-        <p className="text-center">
-          Don't have an account?{' '}
-          <Link to="/register">
-            Register here
-          </Link>
-        </p>
-      </form>
+      </div>
     </div>
   );
 }

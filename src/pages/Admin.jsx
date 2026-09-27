@@ -6,7 +6,8 @@ function Admin() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const backendURL = 'https://medicare-plus-backend-egq7.onrender.com';
+  const backendURL =
+    'https://medicare-plus-backend-egq7.onrender.com';
 
   useEffect(() => {
     fetchData();
@@ -31,7 +32,6 @@ function Admin() {
     }
   };
 
-  // Update appointment status
   const updateAppointmentStatus = async (id, status) => {
     try {
       await axios.put(
@@ -54,7 +54,6 @@ function Admin() {
     }
   };
 
-  // Update order status
   const updateOrderStatus = async (id, status) => {
     try {
       await axios.put(
@@ -77,213 +76,337 @@ function Admin() {
     }
   };
 
+  const getStatusClass = (status) => {
+    switch (status) {
+      case 'confirmed':
+      case 'delivered':
+        return 'admin-status-success';
+
+      case 'completed':
+      case 'processing':
+        return 'admin-status-info';
+
+      case 'cancelled':
+        return 'admin-status-danger';
+
+      default:
+        return 'admin-status-pending';
+    }
+  };
+
+  const totalRevenue = orders.reduce(
+    (total, order) => total + order.totalAmount,
+    0
+  );
+
   if (loading) {
     return (
-      <div className="container py-5">
-        <h3>Loading Admin Dashboard...</h3>
+      <div className="admin-page">
+        <div className="admin-container">
+          <div className="admin-loading">
+            <div className="admin-loading-icon">🛡️</div>
+            <h3>Loading Admin Dashboard...</h3>
+            <p>Please wait while we load the latest data.</p>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="container py-5">
+    <div className="admin-page">
+      <div className="admin-container">
 
-      <h2 className="fw-bold mb-4">
-        🛡️ Admin Dashboard
-      </h2>
+        {/* HEADER */}
+        <div className="admin-header">
+          <div>
+            <span className="admin-label">
+              MEDICARE+ MANAGEMENT
+            </span>
 
-      {/* Statistics */}
-      <div className="row mb-5">
+            <h1>Admin Dashboard</h1>
 
-        <div className="col-md-4 mb-3">
-          <div className="card shadow-sm p-4">
-            <h5>Total Appointments</h5>
-            <h2>{appointments.length}</h2>
+            <p>
+              Manage appointments, medicine orders and
+              healthcare operations.
+            </p>
+          </div>
+
+          <div className="admin-header-icon">
+            🛡️
           </div>
         </div>
 
-        <div className="col-md-4 mb-3">
-          <div className="card shadow-sm p-4">
-            <h5>Total Medicine Orders</h5>
-            <h2>{orders.length}</h2>
+        {/* STATISTICS */}
+        <div className="admin-stats">
+
+          <div className="admin-stat-card">
+            <div className="admin-stat-icon">📅</div>
+
+            <div>
+              <span>Total Appointments</span>
+              <strong>{appointments.length}</strong>
+            </div>
           </div>
+
+          <div className="admin-stat-card">
+            <div className="admin-stat-icon">💊</div>
+
+            <div>
+              <span>Medicine Orders</span>
+              <strong>{orders.length}</strong>
+            </div>
+          </div>
+
+          <div className="admin-stat-card">
+            <div className="admin-stat-icon">₹</div>
+
+            <div>
+              <span>Total Revenue</span>
+              <strong>₹{totalRevenue}</strong>
+            </div>
+          </div>
+
         </div>
 
-        <div className="col-md-4 mb-3">
-          <div className="card shadow-sm p-4">
-            <h5>Total Revenue</h5>
-            <h2>
-              ₹
-              {orders.reduce(
-                (total, order) => total + order.totalAmount,
-                0
-              )}
-            </h2>
+        {/* APPOINTMENTS */}
+        <section className="admin-section">
+
+          <div className="admin-section-heading">
+            <div>
+              <span>APPOINTMENT MANAGEMENT</span>
+              <h2>All Appointments</h2>
+            </div>
+
+            <div className="admin-count">
+              {appointments.length} Records
+            </div>
           </div>
-        </div>
+
+          {appointments.length === 0 ? (
+            <div className="admin-empty">
+              <div>📅</div>
+              <h3>No appointments found</h3>
+              <p>
+                Patient appointments will appear here.
+              </p>
+            </div>
+          ) : (
+            <div className="admin-table-wrapper">
+
+              <table className="admin-table">
+
+                <thead>
+                  <tr>
+                    <th>Patient</th>
+                    <th>Email</th>
+                    <th>Doctor</th>
+                    <th>Specialization</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {appointments.map((appointment) => (
+                    <tr key={appointment._id}>
+
+                      <td>
+                        <strong>
+                          {appointment.patientId?.name || 'N/A'}
+                        </strong>
+                      </td>
+
+                      <td>
+                        {appointment.patientId?.email || 'N/A'}
+                      </td>
+
+                      <td>
+                        {appointment.doctorName}
+                      </td>
+
+                      <td>
+                        {appointment.specialization}
+                      </td>
+
+                      <td>
+                        {appointment.appointmentDate}
+                      </td>
+
+                      <td>
+                        <select
+                          className={`admin-status-select ${getStatusClass(
+                            appointment.status
+                          )}`}
+                          value={appointment.status}
+                          onChange={(e) =>
+                            updateAppointmentStatus(
+                              appointment._id,
+                              e.target.value
+                            )
+                          }
+                        >
+                          <option value="pending">
+                            Pending
+                          </option>
+                          <option value="confirmed">
+                            Confirmed
+                          </option>
+                          <option value="completed">
+                            Completed
+                          </option>
+                          <option value="cancelled">
+                            Cancelled
+                          </option>
+                        </select>
+                      </td>
+
+                    </tr>
+                  ))}
+                </tbody>
+
+              </table>
+
+            </div>
+          )}
+
+        </section>
+
+        {/* ORDERS */}
+        <section className="admin-section">
+
+          <div className="admin-section-heading">
+            <div>
+              <span>PHARMACY MANAGEMENT</span>
+              <h2>All Medicine Orders</h2>
+            </div>
+
+            <div className="admin-count">
+              {orders.length} Orders
+            </div>
+          </div>
+
+          {orders.length === 0 ? (
+            <div className="admin-empty">
+              <div>💊</div>
+              <h3>No medicine orders found</h3>
+              <p>
+                Customer pharmacy orders will appear here.
+              </p>
+            </div>
+          ) : (
+            <div className="admin-order-grid">
+
+              {orders.map((order) => (
+                <div
+                  className="admin-order-card"
+                  key={order._id}
+                >
+
+                  <div className="admin-order-header">
+
+                    <strong>
+                      Order #
+                      {order._id.slice(-6).toUpperCase()}
+                    </strong>
+
+                    <span
+                      className={`admin-status-badge ${getStatusClass(
+                        order.status
+                      )}`}
+                    >
+                      {order.status}
+                    </span>
+
+                  </div>
+
+                  <div className="admin-order-body">
+
+                    <div className="admin-patient-info">
+                      <p>
+                        <strong>Patient:</strong>{' '}
+                        {order.patientId?.name || 'N/A'}
+                      </p>
+
+                      <p>
+                        <strong>Email:</strong>{' '}
+                        {order.patientId?.email || 'N/A'}
+                      </p>
+                    </div>
+
+                    <h4>Medicines</h4>
+
+                    {order.medicines.map(
+                      (medicine, index) => (
+                        <div
+                          key={index}
+                          className="admin-medicine-row"
+                        >
+                          <span>
+                            💊 {medicine.name}
+                          </span>
+
+                          <span>
+                            ₹{medicine.price}
+                          </span>
+                        </div>
+                      )
+                    )}
+
+                    <div className="admin-order-total">
+                      <strong>Total Amount</strong>
+
+                      <strong>
+                        ₹{order.totalAmount}
+                      </strong>
+                    </div>
+
+                    <div className="admin-order-status">
+                      <label>
+                        Update Order Status
+                      </label>
+
+                      <select
+                        className={`admin-status-select ${getStatusClass(
+                          order.status
+                        )}`}
+                        value={order.status}
+                        onChange={(e) =>
+                          updateOrderStatus(
+                            order._id,
+                            e.target.value
+                          )
+                        }
+                      >
+                        <option value="placed">
+                          Placed
+                        </option>
+
+                        <option value="processing">
+                          Processing
+                        </option>
+
+                        <option value="delivered">
+                          Delivered
+                        </option>
+
+                        <option value="cancelled">
+                          Cancelled
+                        </option>
+                      </select>
+                    </div>
+
+                  </div>
+
+                </div>
+              ))}
+
+            </div>
+          )}
+
+        </section>
 
       </div>
-
-      {/* Appointments */}
-      <h4 className="mb-3">🩺 All Appointments</h4>
-
-      {appointments.length === 0 ? (
-        <p className="text-muted mb-5">
-          No appointments found.
-        </p>
-      ) : (
-        <div className="table-responsive mb-5">
-          <table className="table table-hover align-middle">
-
-            <thead className="table-light">
-              <tr>
-                <th>Patient</th>
-                <th>Email</th>
-                <th>Doctor</th>
-                <th>Specialization</th>
-                <th>Date</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {appointments.map((appointment) => (
-                <tr key={appointment._id}>
-
-                  <td>
-                    {appointment.patientId?.name || 'N/A'}
-                  </td>
-
-                  <td>
-                    {appointment.patientId?.email || 'N/A'}
-                  </td>
-
-                  <td>
-                    {appointment.doctorName}
-                  </td>
-
-                  <td>
-                    {appointment.specialization}
-                  </td>
-
-                  <td>
-                    {appointment.appointmentDate}
-                  </td>
-
-                  <td>
-                    <select
-                      className="form-select form-select-sm"
-                      value={appointment.status}
-                      onChange={(e) =>
-                        updateAppointmentStatus(
-                          appointment._id,
-                          e.target.value
-                        )
-                      }
-                    >
-                      <option value="pending">Pending</option>
-                      <option value="confirmed">Confirmed</option>
-                      <option value="completed">Completed</option>
-                      <option value="cancelled">Cancelled</option>
-                    </select>
-                  </td>
-
-                </tr>
-              ))}
-            </tbody>
-
-          </table>
-        </div>
-      )}
-
-      {/* Orders */}
-      <h4 className="mb-3">💊 All Medicine Orders</h4>
-
-      {orders.length === 0 ? (
-        <p className="text-muted">
-          No medicine orders found.
-        </p>
-      ) : (
-        <div className="row">
-
-          {orders.map((order) => (
-            <div
-              className="col-lg-6 mb-4"
-              key={order._id}
-            >
-              <div className="card shadow-sm h-100">
-
-                <div className="card-header d-flex justify-content-between align-items-center">
-                  <strong>
-                    Order #{order._id.slice(-6).toUpperCase()}
-                  </strong>
-
-                  <span className="badge bg-warning text-dark">
-                    {order.status}
-                  </span>
-                </div>
-
-                <div className="card-body">
-
-                  <p>
-                    <strong>Patient:</strong>{' '}
-                    {order.patientId?.name || 'N/A'}
-                  </p>
-
-                  <p>
-                    <strong>Email:</strong>{' '}
-                    {order.patientId?.email || 'N/A'}
-                  </p>
-
-                  <h6>Medicines</h6>
-
-                  {order.medicines.map((medicine, index) => (
-                    <div
-                      key={index}
-                      className="d-flex justify-content-between border-bottom py-2"
-                    >
-                      <span>💊 {medicine.name}</span>
-                      <span>₹{medicine.price}</span>
-                    </div>
-                  ))}
-
-                  <div className="d-flex justify-content-between mt-3">
-                    <strong>Total</strong>
-                    <strong>₹{order.totalAmount}</strong>
-                  </div>
-
-                  {/* Order Status */}
-                  <div className="mt-3">
-                    <label className="form-label fw-bold">
-                      Update Order Status
-                    </label>
-
-                    <select
-                      className="form-select"
-                      value={order.status}
-                      onChange={(e) =>
-                        updateOrderStatus(
-                          order._id,
-                          e.target.value
-                        )
-                      }
-                    >
-                      <option value="placed">Placed</option>
-                      <option value="processing">Processing</option>
-                      <option value="delivered">Delivered</option>
-                      <option value="cancelled">Cancelled</option>
-                    </select>
-                  </div>
-
-                </div>
-
-              </div>
-            </div>
-          ))}
-
-        </div>
-      )}
-
     </div>
   );
 }

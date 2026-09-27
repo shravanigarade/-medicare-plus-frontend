@@ -50,188 +50,258 @@ function Dashboard() {
   const getAppointmentStatusClass = (status) => {
     switch (status) {
       case 'confirmed':
-        return 'bg-success';
+        return 'status-confirmed';
       case 'completed':
-        return 'bg-primary';
+        return 'status-completed';
       case 'cancelled':
-        return 'bg-danger';
+        return 'status-cancelled';
       default:
-        return 'bg-warning text-dark';
+        return 'status-pending';
     }
   };
 
   const getOrderStatusClass = (status) => {
     switch (status) {
       case 'delivered':
-        return 'bg-success';
+        return 'status-confirmed';
       case 'processing':
-        return 'bg-primary';
+        return 'status-completed';
       case 'cancelled':
-        return 'bg-danger';
+        return 'status-cancelled';
       default:
-        return 'bg-warning text-dark';
+        return 'status-pending';
     }
   };
 
   return (
-    <div className="container py-5">
+    <div className="dashboard-page">
+      <div className="dashboard-container">
 
-      <h2 className="fw-bold mb-2">
-        My Dashboard
-      </h2>
+        {/* HEADER */}
+        <div className="dashboard-header">
+          <div>
+            <span className="dashboard-label">MY MEDICARE+</span>
 
-      <p className="text-muted mb-5">
-        Welcome back, {user?.name}!
-      </p>
+            <h1>My Dashboard</h1>
 
-      {/* APPOINTMENTS */}
+            <p>
+              Welcome back, {user?.name}! Manage your appointments
+              and medicine orders from one place.
+            </p>
+          </div>
 
-      <h4 className="mb-3">
-        🩺 My Appointments
-      </h4>
+          <div className="dashboard-welcome">
+            🩺
+          </div>
+        </div>
 
-      {loading ? (
-        <p>Loading appointments...</p>
-      ) : appointments.length === 0 ? (
-        <p className="text-muted mb-5">
-          You haven't booked any appointments yet.
-        </p>
-      ) : (
-        <div className="table-responsive mb-5">
+        {/* SUMMARY */}
+        <div className="dashboard-summary">
 
-          <table className="table table-hover align-middle">
+          <div className="summary-card">
+            <div className="summary-icon">📅</div>
 
-            <thead className="table-light">
-              <tr>
-                <th>Doctor</th>
-                <th>Specialization</th>
-                <th>Date</th>
-                <th>Status</th>
-              </tr>
-            </thead>
+            <div>
+              <span>Appointments</span>
+              <strong>{appointments.length}</strong>
+            </div>
+          </div>
 
-            <tbody>
-              {appointments.map((appt) => (
-                <tr key={appt._id}>
+          <div className="summary-card">
+            <div className="summary-icon">💊</div>
 
-                  <td>{appt.doctorName}</td>
+            <div>
+              <span>Medicine Orders</span>
+              <strong>{orders.length}</strong>
+            </div>
+          </div>
 
-                  <td>{appt.specialization}</td>
+          <div className="summary-card">
+            <div className="summary-icon">❤️</div>
 
-                  <td>{appt.appointmentDate}</td>
-
-                  <td>
-                    <span
-                      className={`badge ${getAppointmentStatusClass(
-                        appt.status
-                      )}`}
-                    >
-                      {appt.status}
-                    </span>
-                  </td>
-
-                </tr>
-              ))}
-            </tbody>
-
-          </table>
+            <div>
+              <span>Healthcare</span>
+              <strong>Active</strong>
+            </div>
+          </div>
 
         </div>
-      )}
 
-      {/* MEDICINE ORDERS */}
+        {/* APPOINTMENTS */}
+        <section className="dashboard-section">
 
-      <h4 className="mb-3">
-        💊 My Medicine Orders
-      </h4>
+          <div className="dashboard-section-title">
+            <div>
+              <span>APPOINTMENTS</span>
+              <h2>My Appointments</h2>
+            </div>
+          </div>
 
-      {ordersLoading ? (
-        <p>Loading orders...</p>
-      ) : orders.length === 0 ? (
-        <p className="text-muted">
-          You haven't placed any medicine orders yet.
-        </p>
-      ) : (
-        <div className="row">
+          {loading ? (
+            <div className="dashboard-empty">
+              <p>Loading appointments...</p>
+            </div>
+          ) : appointments.length === 0 ? (
+            <div className="dashboard-empty">
+              <div className="empty-icon">📅</div>
+              <h3>No appointments yet</h3>
+              <p>
+                Your booked doctor appointments will appear here.
+              </p>
+            </div>
+          ) : (
+            <div className="appointment-table-wrapper">
 
-          {orders.map((order) => (
+              <table className="dashboard-table">
 
-            <div
-              className="col-lg-6 mb-4"
-              key={order._id}
-            >
+                <thead>
+                  <tr>
+                    <th>Doctor</th>
+                    <th>Specialization</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
 
-              <div className="card shadow-sm h-100">
+                <tbody>
+                  {appointments.map((appt) => (
+                    <tr key={appt._id}>
 
-                <div className="card-header d-flex justify-content-between align-items-center">
+                      <td>
+                        <strong>{appt.doctorName}</strong>
+                      </td>
 
-                  <strong>
-                    Order #{order._id.slice(-6).toUpperCase()}
-                  </strong>
+                      <td>
+                        {appt.specialization}
+                      </td>
 
-                  <span
-                    className={`badge ${getOrderStatusClass(
-                      order.status
-                    )}`}
-                  >
-                    {order.status}
-                  </span>
+                      <td>
+                        {appt.appointmentDate}
+                      </td>
 
-                </div>
+                      <td>
+                        <span
+                          className={`dashboard-status ${getAppointmentStatusClass(
+                            appt.status
+                          )}`}
+                        >
+                          {appt.status}
+                        </span>
+                      </td>
 
-                <div className="card-body">
-
-                  <h6 className="mb-3">
-                    Medicines
-                  </h6>
-
-                  {order.medicines.map((medicine, index) => (
-
-                    <div
-                      key={index}
-                      className="d-flex justify-content-between border-bottom py-2"
-                    >
-
-                      <span>
-                        💊 {medicine.name}
-                      </span>
-
-                      <span>
-                        ₹{medicine.price}
-                      </span>
-
-                    </div>
-
+                    </tr>
                   ))}
+                </tbody>
 
-                  <div className="d-flex justify-content-between mt-3">
+              </table>
+
+            </div>
+          )}
+
+        </section>
+
+        {/* ORDERS */}
+        <section className="dashboard-section">
+
+          <div className="dashboard-section-title">
+            <div>
+              <span>PHARMACY</span>
+              <h2>My Medicine Orders</h2>
+            </div>
+          </div>
+
+          {ordersLoading ? (
+            <div className="dashboard-empty">
+              <p>Loading orders...</p>
+            </div>
+          ) : orders.length === 0 ? (
+            <div className="dashboard-empty">
+              <div className="empty-icon">💊</div>
+
+              <h3>No medicine orders yet</h3>
+
+              <p>
+                Your pharmacy orders will appear here.
+              </p>
+            </div>
+          ) : (
+            <div className="dashboard-order-grid">
+
+              {orders.map((order) => (
+
+                <div
+                  className="dashboard-order-card"
+                  key={order._id}
+                >
+
+                  <div className="order-card-header">
 
                     <strong>
-                      Total Amount
+                      Order #{order._id.slice(-6).toUpperCase()}
                     </strong>
 
-                    <strong>
-                      ₹{order.totalAmount}
-                    </strong>
+                    <span
+                      className={`dashboard-status ${getOrderStatusClass(
+                        order.status
+                      )}`}
+                    >
+                      {order.status}
+                    </span>
 
                   </div>
 
-                  <small className="text-muted d-block mt-2">
-                    Ordered on:{' '}
-                    {new Date(order.createdAt).toLocaleDateString()}
-                  </small>
+                  <div className="order-card-body">
+
+                    <h4>Medicines</h4>
+
+                    {order.medicines.map((medicine, index) => (
+
+                      <div
+                        key={index}
+                        className="order-medicine"
+                      >
+
+                        <span>
+                          💊 {medicine.name}
+                        </span>
+
+                        <span>
+                          ₹{medicine.price}
+                        </span>
+
+                      </div>
+
+                    ))}
+
+                    <div className="order-total">
+
+                      <strong>Total Amount</strong>
+
+                      <strong>
+                        ₹{order.totalAmount}
+                      </strong>
+
+                    </div>
+
+                    <small>
+                      Ordered on:{' '}
+                      {new Date(
+                        order.createdAt
+                      ).toLocaleDateString()}
+                    </small>
+
+                  </div>
 
                 </div>
 
-              </div>
+              ))}
 
             </div>
+          )}
 
-          ))}
+        </section>
 
-        </div>
-      )}
-
+      </div>
     </div>
   );
 }
