@@ -1,10 +1,14 @@
+
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 function Admin() {
   const [appointments, setAppointments] = useState([]);
   const [orders, setOrders] = useState([]);
+  const [doctorReports, setDoctorReports] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [reportLoading, setReportLoading] = useState(true);
+  const [reportError, setReportError] = useState('');
 
   const backendURL =
     'https://medicare-plus-backend-egq7.onrender.com';
@@ -15,13 +19,11 @@ function Admin() {
 
   const fetchData = async () => {
     try {
-      const appointmentsResponse = await axios.get(
-        `${backendURL}/api/appointments/all`
-      );
-
-      const ordersResponse = await axios.get(
-        `${backendURL}/api/orders/all`
-      );
+      const [appointmentsResponse, ordersResponse] =
+        await Promise.all([
+          axios.get(`${backendURL}/api/appointments/all`),
+          axios.get(`${backendURL}/api/orders/all`),
+        ]);
 
       setAppointments(appointmentsResponse.data);
       setOrders(ordersResponse.data);
@@ -29,6 +31,28 @@ function Admin() {
       console.error('Admin data error:', error);
     } finally {
       setLoading(false);
+    }
+
+    fetchDoctorReports();
+  };
+
+  const fetchDoctorReports = async () => {
+    setReportLoading(true);
+    setReportError('');
+
+    try {
+      const response = await axios.get(
+        `${backendURL}/api/appointments/reports/doctors`
+      );
+
+      setDoctorReports(response.data);
+    } catch (error) {
+      console.error('Doctor reports error:', error);
+      setReportError(
+        'Could not load doctor reports. Check the backend API route.'
+      );
+    } finally {
+      setReportLoading(false);
     }
   };
 
@@ -46,6 +70,9 @@ function Admin() {
             : appointment
         )
       );
+
+      // Refresh report counts after a status change
+      await fetchDoctorReports();
 
       alert('Appointment status updated!');
     } catch (error) {
@@ -95,7 +122,7 @@ function Admin() {
   };
 
   const totalRevenue = orders.reduce(
-    (total, order) => total + order.totalAmount,
+    (total, order) => total + (Number(order.totalAmount) || 0),
     0
   );
 
@@ -123,26 +150,20 @@ function Admin() {
             <span className="admin-label">
               MEDICARE+ MANAGEMENT
             </span>
-
             <h1>Admin Dashboard</h1>
-
             <p>
               Manage appointments, medicine orders and
               healthcare operations.
             </p>
           </div>
 
-          <div className="admin-header-icon">
-            🛡️
-          </div>
+          <div className="admin-header-icon">🛡️</div>
         </div>
 
         {/* STATISTICS */}
         <div className="admin-stats">
-
           <div className="admin-stat-card">
             <div className="admin-stat-icon">📅</div>
-
             <div>
               <span>Total Appointments</span>
               <strong>{appointments.length}</strong>
@@ -151,7 +172,6 @@ function Admin() {
 
           <div className="admin-stat-card">
             <div className="admin-stat-icon">💊</div>
-
             <div>
               <span>Medicine Orders</span>
               <strong>{orders.length}</strong>
@@ -160,18 +180,92 @@ function Admin() {
 
           <div className="admin-stat-card">
             <div className="admin-stat-icon">₹</div>
-
             <div>
               <span>Total Revenue</span>
               <strong>₹{totalRevenue}</strong>
             </div>
           </div>
-
         </div>
+
+        {/* DOCTOR-WISE REPORTS */}
+        <section className="admin-section">
+          <div className="admin-section-heading">
+            <div>
+              <span>REPORTS & ANALYTICS</span>
+              <h2>Doctor-wise Reports</h2>
+            </div>
+
+            <button
+              type="button"
+              className="admin-report-refresh"
+              onClick={fetchDoctorReports}
+              disabled={reportLoading}
+            >
+              {reportLoading ? 'Loading...' : 'Refresh Reports'}
+            </button>
+          </div>
+
+          <p className="admin-report-description">
+            View appointment totals, distinct patients and completed
+            visits for each doctor using your appointment database.
+          </p>
+
+          {reportLoading ? (
+            <div className="admin-empty">
+              <p>Loading doctor reports...</p>
+            </div>
+          ) : reportError ? (
+            <div className="admin-empty">
+              <h3>Reports unavailable</h3>
+              <p>{reportError}</p>
+              <button
+                type="button"
+                className="admin-report-refresh"
+                onClick={fetchDoctorReports}
+              >
+                Try Again
+              </button>
+            </div>
+          ) : doctorReports.length === 0 ? (
+            <div className="admin-empty">
+              <div>📊</div>
+              <h3>No doctor reports available</h3>
+              <p>
+                Reports will appear after appointments are stored
+                in the database.
+              </p>
+            </div>
+          ) : (
+            <div className="admin-table-wrapper">
+              <table className="admin-table">
+                <thead>
+                  <tr>
+                    <th>Doctor</th>
+                    <th>Total Appointments</th>
+                    <th>Unique Patients</th>
+                    <th>Completed Visits</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {doctorReports.map((report) => (
+                    <tr key={report.doctorName}>
+                      <td>
+                        <strong>{report.doctorName}</strong>
+                      </td>
+                      <td>{report.totalAppointments}</td>
+                      <td>{report.uniquePatients}</td>
+                      <td>{report.completedVisits}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </section>
 
         {/* APPOINTMENTS */}
         <section className="admin-section">
-
           <div className="admin-section-heading">
             <div>
               <span>APPOINTMENT MANAGEMENT</span>
@@ -187,15 +281,11 @@ function Admin() {
             <div className="admin-empty">
               <div>📅</div>
               <h3>No appointments found</h3>
-              <p>
-                Patient appointments will appear here.
-              </p>
+              <p>Patient appointments will appear here.</p>
             </div>
           ) : (
             <div className="admin-table-wrapper">
-
               <table className="admin-table">
-
                 <thead>
                   <tr>
                     <th>Patient</th>
@@ -210,7 +300,6 @@ function Admin() {
                 <tbody>
                   {appointments.map((appointment) => (
                     <tr key={appointment._id}>
-
                       <td>
                         <strong>
                           {appointment.patientId?.name || 'N/A'}
@@ -221,17 +310,9 @@ function Admin() {
                         {appointment.patientId?.email || 'N/A'}
                       </td>
 
-                      <td>
-                        {appointment.doctorName}
-                      </td>
-
-                      <td>
-                        {appointment.specialization}
-                      </td>
-
-                      <td>
-                        {appointment.appointmentDate}
-                      </td>
+                      <td>{appointment.doctorName}</td>
+                      <td>{appointment.specialization}</td>
+                      <td>{appointment.appointmentDate}</td>
 
                       <td>
                         <select
@@ -246,35 +327,22 @@ function Admin() {
                             )
                           }
                         >
-                          <option value="pending">
-                            Pending
-                          </option>
-                          <option value="confirmed">
-                            Confirmed
-                          </option>
-                          <option value="completed">
-                            Completed
-                          </option>
-                          <option value="cancelled">
-                            Cancelled
-                          </option>
+                          <option value="pending">Pending</option>
+                          <option value="confirmed">Confirmed</option>
+                          <option value="completed">Completed</option>
+                          <option value="cancelled">Cancelled</option>
                         </select>
                       </td>
-
                     </tr>
                   ))}
                 </tbody>
-
               </table>
-
             </div>
           )}
-
         </section>
 
         {/* ORDERS */}
         <section className="admin-section">
-
           <div className="admin-section-heading">
             <div>
               <span>PHARMACY MANAGEMENT</span>
@@ -290,24 +358,15 @@ function Admin() {
             <div className="admin-empty">
               <div>💊</div>
               <h3>No medicine orders found</h3>
-              <p>
-                Customer pharmacy orders will appear here.
-              </p>
+              <p>Customer pharmacy orders will appear here.</p>
             </div>
           ) : (
             <div className="admin-order-grid">
-
               {orders.map((order) => (
-                <div
-                  className="admin-order-card"
-                  key={order._id}
-                >
-
+                <div className="admin-order-card" key={order._id}>
                   <div className="admin-order-header">
-
                     <strong>
-                      Order #
-                      {order._id.slice(-6).toUpperCase()}
+                      Order #{order._id.slice(-6).toUpperCase()}
                     </strong>
 
                     <span
@@ -317,17 +376,14 @@ function Admin() {
                     >
                       {order.status}
                     </span>
-
                   </div>
 
                   <div className="admin-order-body">
-
                     <div className="admin-patient-info">
                       <p>
                         <strong>Patient:</strong>{' '}
                         {order.patientId?.name || 'N/A'}
                       </p>
-
                       <p>
                         <strong>Email:</strong>{' '}
                         {order.patientId?.email || 'N/A'}
@@ -336,35 +392,23 @@ function Admin() {
 
                     <h4>Medicines</h4>
 
-                    {order.medicines.map(
-                      (medicine, index) => (
-                        <div
-                          key={index}
-                          className="admin-medicine-row"
-                        >
-                          <span>
-                            💊 {medicine.name}
-                          </span>
-
-                          <span>
-                            ₹{medicine.price}
-                          </span>
-                        </div>
-                      )
-                    )}
+                    {(order.medicines || []).map((medicine, index) => (
+                      <div
+                        key={index}
+                        className="admin-medicine-row"
+                      >
+                        <span>💊 {medicine.name}</span>
+                        <span>₹{medicine.price}</span>
+                      </div>
+                    ))}
 
                     <div className="admin-order-total">
                       <strong>Total Amount</strong>
-
-                      <strong>
-                        ₹{order.totalAmount}
-                      </strong>
+                      <strong>₹{order.totalAmount}</strong>
                     </div>
 
                     <div className="admin-order-status">
-                      <label>
-                        Update Order Status
-                      </label>
+                      <label>Update Order Status</label>
 
                       <select
                         className={`admin-status-select ${getStatusClass(
@@ -378,32 +422,17 @@ function Admin() {
                           )
                         }
                       >
-                        <option value="placed">
-                          Placed
-                        </option>
-
-                        <option value="processing">
-                          Processing
-                        </option>
-
-                        <option value="delivered">
-                          Delivered
-                        </option>
-
-                        <option value="cancelled">
-                          Cancelled
-                        </option>
+                        <option value="placed">Placed</option>
+                        <option value="processing">Processing</option>
+                        <option value="delivered">Delivered</option>
+                        <option value="cancelled">Cancelled</option>
                       </select>
                     </div>
-
                   </div>
-
                 </div>
               ))}
-
             </div>
           )}
-
         </section>
 
       </div>
